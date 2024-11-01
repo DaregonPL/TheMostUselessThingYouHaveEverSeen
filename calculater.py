@@ -31,6 +31,12 @@ class Actions:  # FUCK THIS CLASS
     def exp(a: int, b: int):
         return a ** b
 
+    def back_exp(a: int, b: int):
+        return a ** (1 / b)
+
+    def ost(a: int, b: int):
+        return a % b
+
 
 class CalculatorApp:
     intro = {
@@ -47,7 +53,9 @@ class CalculatorApp:
         '*': Actions.mul,
         '/': Actions.div,
         '//': Actions.divmod,
-        '**': Actions.exp
+        '**': Actions.exp,
+        '^': Actions.back_exp,
+        '%': Actions.ost
     }  # Programmed functions in Actions
     place = ''  # Var. to help self.read() to find our pos
     ans = ''  # Var. to share user's answer between methods
@@ -146,8 +154,13 @@ class CalculatorApp:
             self.place = 'get_b'  # > ------ Getting B
             code, b = self.read(f'{a} {actn} ')
             if code:  # Valid ans
-                res = self.programmed[actn](a, b)
-                input(f' = {res}')
+                try:
+                    res = self.programmed[actn](a, b)
+                    input(f' = {res}')
+                except ZeroDivisionError:
+                    input('Упс. Ошибка деления на ноль')
+                except Exception as e:
+                    input(f'Ошибочка... : {e}')
             else:
                 print('Недопустимый ответ')  # Get back to root
         elif code == 0:  # >     Wrong Action in input
